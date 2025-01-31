@@ -1,5 +1,7 @@
 #The most important function in matplotlib is plot,
 # which allows you to plot 2D data. Here is a simple example:
+import math
+
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.ndimage import label
@@ -27,3 +29,4 @@ plt.subplot(2, 1, 2)
 plt.plot(x, z)
 plt.title('Cos')
 plt.show()
+print(math.comb(1000,2))
