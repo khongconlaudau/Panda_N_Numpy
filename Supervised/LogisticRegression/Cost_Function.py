@@ -1,4 +1,4 @@
-from sigmoid import sigmoid
+from Sigmoid import sigmoid
 import numpy as np
 
 # 𝑙𝑜𝑠𝑠(𝑓𝐰,𝑏(𝐱(𝑖)),𝑦(𝑖))=−𝑦(𝑖)log(𝑓𝐰,𝑏(𝐱(𝑖)))−(1−𝑦(𝑖))log(1−𝑓𝐰,𝑏(𝐱(𝑖)))(2)

@@ -1,6 +1,6 @@
 import copy
 import numpy as np
-from sigmoid import sigmoid
+from Sigmoid import sigmoid
 from Cost_Function import compute_cost_logistic
 
 
