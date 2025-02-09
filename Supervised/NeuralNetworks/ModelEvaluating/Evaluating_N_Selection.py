@@ -28,155 +28,155 @@ x_cv, x_test, y_cv, y_test= train_test_split(x_, y_, test_size=0.50, random_stat
 
 # del tmp variables
 del x_, y_
-
-print(f"the shape of the training set (input) is: {x_train.shape}")
-print(f"the shape of the training set (target) is: {y_train.shape}\n")
-print(f"the shape of the cross validation set (input) is: {x_cv.shape}")
-print(f"the shape of the cross validation set (target) is: {y_cv.shape}\n")
-print(f"the shape of the test set (input) is: {x_test.shape}")
-print(f"the shape of the test set (target) is: {y_test.shape}")
-
-
-# Initialize Standard Scaler class
-scaler_linear = StandardScaler()
-
-# Feature Scaling for x_train
-# z = (x - mean) / std
-
-X_train_scaled = scaler_linear.fit_transform(x_train)
-
-# Visualize the data after scaling
-# plt.scatter(X_train_scaled,y_train )
-# plt.show()
-print()
-print(f"Computed mean of the training set: {scaler_linear.mean_.squeeze():.2f}")
-print(f"Computed st deviation of the training set: {scaler_linear.scale_.squeeze():.2f}")
-
-# Train the model
-linear_model = LinearRegression()
-linear_model.fit(X_train_scaled, y_train)
-
-# prediction
-yhat = linear_model.predict(X_train_scaled)
-
-'''
-Scikit-learn also has a built-in mean_squared_error() function that you can use.
-Take note though that as per the documentation,scikit-learn's implementation 
-only divides by m and not 2*m
-'''
-print(f"Training MSE: {mean_squared_error(yhat, y_train) / 2}")
-
-'''
-An important thing to note when using the z-score is you have to
-use the mean and standard deviation of the "training set" when scaling the cross validation set. 
-This is to ensure that your input features are transformed as expected by the model.
-'''
-X_cv_scaled = scaler_linear.transform(x_cv)
-print()
-print(f"Mean used to scale the CV set: {scaler_linear.mean_.squeeze():.2f}")
-print(f"Standard deviation used to scale the CV set: {scaler_linear.scale_.squeeze():.2f}")
-
-yhat = linear_model.predict(X_cv_scaled)
-print(f"Cross validation MSE: {mean_squared_error(yhat, y_cv)/2} ")
+if __name__ == '__main__':
+    print(f"the shape of the training set (input)   is: {x_train.shape}")
+    print(f"the shape of the training set (target) is: {y_train.shape}\n")
+    print(f"the shape of the cross validation set (input) is: {x_cv.shape}")
+    print(f"the shape of the cross validation set (target) is: {y_cv.shape}\n")
+    print(f"the shape of the test set (input) is: {x_test.shape}")
+    print(f"the shape of the test set (target) is: {y_test.shape}")
 
 
+    # Initialize Standard Scaler class
+    scaler_linear = StandardScaler()
 
-# Because cost function is too large we need to use different poly
+    # Feature Scaling for x_train
+    # z = (x - mean) / std
 
-# Initialize Poly Features class with degree of 2
-poly = PolynomialFeatures(degree=2, include_bias=False)
-X_train_mapped = poly.fit_transform(x_train)
-'''
-Note: The `e+<number>` in the output denotes how many places the decimal point should 
-be moved. For example, `3.24e+03` is equal to `3240`
-'''
-print()
-print(X_train_mapped[:5])
+    X_train_scaled = scaler_linear.fit_transform(x_train)
 
-# Scaling Featuring
-scaler_poly = StandardScaler()
-X_train_mapped_scaled = scaler_poly.fit_transform(X_train_mapped)
-print()
-print("After scaling: \n",X_train_mapped_scaled[:5])
+    # Visualize the data after scaling
+    # plt.scatter(X_train_scaled,y_train )
+    # plt.show()
+    print()
+    print(f"Computed mean of the training set: {scaler_linear.mean_.squeeze():.2f}")
+    print(f"Computed st deviation of the training set: {scaler_linear.scale_.squeeze():.2f}")
 
-# Training model
-model = LinearRegression()
+    # Train the model
+    linear_model = LinearRegression()
+    linear_model.fit(X_train_scaled, y_train)
 
-model.fit(X_train_mapped_scaled, y_train)
-yhat  = model.predict(X_train_mapped_scaled)
-print()
-print(f"Training MSE: {mean_squared_error(yhat, y_train) / 2}")
+    # prediction
+    yhat = linear_model.predict(X_train_scaled)
 
-# Add the polynomial features to the cross validation set
-X_cv_mapped = poly.transform(x_cv)
-# Scale
-X_cv_mapped_scaled = scaler_poly.transform(X_cv_mapped)
+    '''
+    Scikit-learn also has a built-in mean_squared_error() function that you can use.
+    Take note though that as per the documentation,scikit-learn's implementation 
+    only divides by m and not 2*m
+    '''
+    print(f"Training MSE: {mean_squared_error(yhat, y_train) / 2}")
 
-# Compute CV MSE
-yhat = model.predict(X_cv_mapped_scaled)
-print(f"Cross validation MSE: {mean_squared_error(yhat, y_cv) / 2}")
+    '''
+    An important thing to note when using the z-score is you have to
+    use the mean and standard deviation of the "training set" when scaling the cross validation set. 
+    This is to ensure that your input features are transformed as expected by the model.
+    '''
+    X_cv_scaled = scaler_linear.transform(x_cv)
+    print()
+    print(f"Mean used to scale the CV set: {scaler_linear.mean_.squeeze():.2f}")
+    print(f"Standard deviation used to scale the CV set: {scaler_linear.scale_.squeeze():.2f}")
+
+    yhat = linear_model.predict(X_cv_scaled)
+    print(f"Cross validation MSE: {mean_squared_error(yhat, y_cv)/2} ")
 
 
-'''
-We can loop over ~ 10 times to choose the best poly
-'''
 
-train_mses, cv_mses, models, polys, scalers = [], [], [], [], []
+    # Because cost function is too large we need to use different poly
 
-for degree in range(1,11):
-    # Add popy features to the traning set
-    poly = PolynomialFeatures(degree=degree, include_bias=False)
+    # Initialize Poly Features class with degree of 2
+    poly = PolynomialFeatures(degree=2, include_bias=False)
     X_train_mapped = poly.fit_transform(x_train)
-    polys.append(poly)
+    '''
+    Note: The `e+<number>` in the output denotes how many places the decimal point should 
+    be moved. For example, `3.24e+03` is equal to `3240`
+    '''
+    print()
+    print(X_train_mapped[:5])
 
-    # add scaling featuring
+    # Scaling Featuring
     scaler_poly = StandardScaler()
     X_train_mapped_scaled = scaler_poly.fit_transform(X_train_mapped)
-    scalers.append(scaler_poly)
+    print()
+    print("After scaling: \n",X_train_mapped_scaled[:5])
 
-    # create training model
+    # Training model
     model = LinearRegression()
+
     model.fit(X_train_mapped_scaled, y_train)
-    models.append(model)
+    yhat  = model.predict(X_train_mapped_scaled)
+    print()
+    print(f"Training MSE: {mean_squared_error(yhat, y_train) / 2}")
 
-    # compute training MSE
-    yhat = model.predict(X_train_mapped_scaled)
-    train_mses.append(mean_squared_error(yhat, y_train) / 2)
-
-    # add poly and scale featuring to cv set
+    # Add the polynomial features to the cross validation set
     X_cv_mapped = poly.transform(x_cv)
+    # Scale
     X_cv_mapped_scaled = scaler_poly.transform(X_cv_mapped)
 
-    # compute cv  MSE
+    # Compute CV MSE
     yhat = model.predict(X_cv_mapped_scaled)
-    cv_mses.append(mean_squared_error(yhat, y_cv) / 2)
-
-degree = range(1,11)
-# Visualize the data
-# plt.plot(degree, train_mses, label='Training MSE',color='red')
-# plt.plot(degree, cv_mses, label='Cross Validation MSE',color='blue')
-# plt.xlabel('degree')
-# plt.ylabel('MSE')
-# plt.legend()
-# plt.title('degree of polynomial vs. train and CV MSEs')
-# plt.show()
-
-# Choosing the best model
-# Get the model with the lowest CV MSE (add 1 because list indices start at 0)
-b_degree = np.argmin(cv_mses)
-print(f"Lowest CV MSE is found in the model with degree={b_degree+1}")
+    print(f"Cross validation MSE: {mean_squared_error(yhat, y_cv) / 2}")
 
 
-# Add pylo and scaling features to x_test
+    '''
+    We can loop over ~ 10 times to choose the best poly
+    '''
 
-X_test_mapped = polys[b_degree].transform(x_test)
-X_test_mapped_scaled = scalers[b_degree].transform(X_test_mapped)
+    train_mses, cv_mses, models, polys, scalers = [], [], [], [], []
 
-# Compute MSE of x_test
-yhat = models[b_degree].predict(X_test_mapped_scaled)
-test_mse = mean_squared_error(yhat, y_test)/2
-print()
-print(f"Training MSE: {train_mses[b_degree]:.2f}")
-print(f"Cross Validation MSE: {cv_mses[b_degree]:.2f}")
-print(f"Test MSE: {test_mse:.2f}")
+    for degree in range(1,11):
+        # Add popy features to the traning set
+        poly = PolynomialFeatures(degree=degree, include_bias=False)
+        X_train_mapped = poly.fit_transform(x_train)
+        polys.append(poly)
+
+        # add scaling featuring
+        scaler_poly = StandardScaler()
+        X_train_mapped_scaled = scaler_poly.fit_transform(X_train_mapped)
+        scalers.append(scaler_poly)
+
+        # create training model
+        model = LinearRegression()
+        model.fit(X_train_mapped_scaled, y_train)
+        models.append(model)
+
+        # compute training MSE
+        yhat = model.predict(X_train_mapped_scaled)
+        train_mses.append(mean_squared_error(yhat, y_train) / 2)
+
+        # add poly and scale featuring to cv set
+        X_cv_mapped = poly.transform(x_cv)
+        X_cv_mapped_scaled = scaler_poly.transform(X_cv_mapped)
+
+        # compute cv  MSE
+        yhat = model.predict(X_cv_mapped_scaled)
+        cv_mses.append(mean_squared_error(yhat, y_cv) / 2)
+
+    degree = range(1,11)
+    # Visualize the data
+    # plt.plot(degree, train_mses, label='Training MSE',color='red')
+    # plt.plot(degree, cv_mses, label='Cross Validation MSE',color='blue')
+    # plt.xlabel('degree')
+    # plt.ylabel('MSE')
+    # plt.legend()
+    # plt.title('degree of polynomial vs. train and CV MSEs')
+    # plt.show()
+
+    # Choosing the best model
+    # Get the model with the lowest CV MSE (add 1 because list indices start at 0)
+    b_degree = np.argmin(cv_mses)
+    print(f"Lowest CV MSE is found in the model with degree={b_degree+1}")
+
+
+    # Add pylo and scaling features to x_test
+
+    X_test_mapped = polys[b_degree].transform(x_test)
+    X_test_mapped_scaled = scalers[b_degree].transform(X_test_mapped)
+
+    # Compute MSE of x_test
+    yhat = models[b_degree].predict(X_test_mapped_scaled)
+    test_mse = mean_squared_error(yhat, y_test)/2
+    print()
+    print(f"Training MSE: {train_mses[b_degree]:.2f}")
+    print(f"Cross Validation MSE: {cv_mses[b_degree]:.2f}")
+    print(f"Test MSE: {test_mse:.2f}")
 
